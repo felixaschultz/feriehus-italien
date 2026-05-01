@@ -1,0 +1,26 @@
+---
+import { toHTML } from "@portabletext/to-html";
+import type { PortableTextBlock } from "@portabletext/to-html";
+
+interface Props {
+  blocks: PortableTextBlock[] | undefined | null;
+}
+
+const { blocks } = Astro.props;
+
+const html = blocks
+  ? toHTML(blocks, {
+      components: {
+        marks: {
+          link: ({ children, value }) => {
+            const href = (value?.href as string) || "#";
+            const isExternal = /^https?:\/\//i.test(href);
+            return `<a href="${href}"${isExternal ? ' target="_blank" rel="noopener noreferrer"' : ""} class="underline decoration-[var(--color-terracotta)] underline-offset-4 hover:text-[var(--color-terracotta)]">${children}</a>`;
+          },
+        },
+      },
+    })
+  : "";
+---
+
+{html && <div set:html={html} />}

@@ -11,11 +11,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
+# environment variables (keep .env.example committed)
 .env
 .env.production
 .env.local
 .env.development.local
+.env.*.local
 
 # macOS
 .DS_Store

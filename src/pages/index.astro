@@ -1,29 +1,94 @@
 ---
+export const prerender = true;
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Section from "../components/Section.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import FeatureGrid from "../components/FeatureGrid.astro";
 import GalleryGrid from "../components/GalleryGrid.astro";
+import PortableText from "../components/PortableText.astro";
 import CTA from "../components/CTA.astro";
+import { fetchHomepage } from "../lib/queries";
+import { urlFor } from "../lib/sanity";
 
-const features = [
-  { title: "4 soveværelser", description: "Rummelige og lyse" },
-  { title: "2 badeværelser", description: "Nye og moderne" },
-  { title: "Nyt køkken", description: "Fuldt udstyret" },
-  { title: "Stor spisestue", description: "Med tilhørende TV" },
-  { title: "Pejsestue", description: "Hyggelig afslapning" },
-  { title: "Unikt vinrum", description: "Et glas i kølige omgivelser" },
-  { title: "Terrasse", description: "Smuk udsigt over vinlandskabet" },
-  { title: "God parkering", description: "Nem adgang til huset" },
-];
+const data = await fetchHomepage();
 
-const galleryTeaser = [
-  { src: "https://picsum.photos/seed/casa-gal-1/700/900", alt: "Terrasse" },
-  { src: "https://picsum.photos/seed/casa-gal-2/700/900", alt: "Køkken" },
-  { src: "https://picsum.photos/seed/casa-gal-3/700/900", alt: "Soveværelse" },
-  { src: "https://picsum.photos/seed/casa-gal-4/700/900", alt: "Vinrum" },
-];
+// Fallback content (used when Sanity isn't configured yet, or the document
+// hasn't been published). Once the owner publishes content in /studio, that
+// content takes over automatically.
+const fallback = {
+  heroEyebrow: "Canelli · Piemonte · Italien",
+  heroTitle: "Charmerende feriehus i hjertet af Piemonte",
+  heroSubtitle:
+    "Et hyggeligt hus omgivet af vinmarker og bakker — perfekt til afslapning, ægte italiensk stemning og et glas vin på terrassen.",
+  heroImage: "https://picsum.photos/seed/santa-libera-hero/2400/1500",
+  heroImageAlt: "Udsigt over vinmarker omkring Casa Santa Libera",
+  heroCtaLabel: "Kontakt os",
+
+  welcomeEyebrow: "Velkommen",
+  welcomeHeading: "Velkommen til Santa Libera",
+
+  aboutEyebrow: "Om boligen",
+  aboutHeading: "Klassisk italiensk charme — moderne komfort",
+  aboutImage: "https://picsum.photos/seed/santa-libera-living/900/1100",
+  aboutImageAlt: "Stue med pejs i Casa Santa Libera",
+
+  features: [
+    { title: "4 soveværelser", description: "Rummelige og lyse" },
+    { title: "2 badeværelser", description: "Nye og moderne" },
+    { title: "Nyt køkken", description: "Fuldt udstyret" },
+    { title: "Stor spisestue", description: "Med tilhørende TV" },
+    { title: "Pejsestue", description: "Hyggelig afslapning" },
+    { title: "Unikt vinrum", description: "Et glas i kølige omgivelser" },
+    { title: "Terrasse", description: "Smuk udsigt over vinlandskabet" },
+    { title: "God parkering", description: "Nem adgang til huset" },
+  ],
+
+  galleryEyebrow: "Galleri",
+  galleryHeading: "Et glimt af huset",
+  galleryImages: [
+    { src: "https://picsum.photos/seed/casa-gal-1/700/900", alt: "Terrasse" },
+    { src: "https://picsum.photos/seed/casa-gal-2/700/900", alt: "Køkken" },
+    { src: "https://picsum.photos/seed/casa-gal-3/700/900", alt: "Soveværelse" },
+    { src: "https://picsum.photos/seed/casa-gal-4/700/900", alt: "Vinrum" },
+  ],
+
+  areaEyebrow: "Om området",
+  areaHeading: "Canelli — italiensk vinkultur",
+  areaImage: "https://picsum.photos/seed/canelli-vineyard/900/1100",
+  areaImageAlt: "Vinmarker omkring Canelli",
+
+  ctaEyebrow: "Book dit ophold",
+  ctaHeading: "Klar til en ferie i Piemonte?",
+  ctaBody:
+    "Skriv til os for at høre nærmere om ledige uger, priser og praktiske oplysninger.",
+  ctaLabel: "Kontakt os",
+};
+
+const heroImage = data?.heroImage
+  ? urlFor(data.heroImage).width(2400).height(1500).fit("crop").auto("format").url()
+  : fallback.heroImage;
+const heroImageAlt = data?.heroImage?.alt || fallback.heroImageAlt;
+
+const aboutImage = data?.aboutImage
+  ? urlFor(data.aboutImage).width(900).height(1100).fit("crop").auto("format").url()
+  : fallback.aboutImage;
+const aboutImageAlt = data?.aboutImage?.alt || fallback.aboutImageAlt;
+
+const areaImage = data?.areaImage
+  ? urlFor(data.areaImage).width(900).height(1100).fit("crop").auto("format").url()
+  : fallback.areaImage;
+const areaImageAlt = data?.areaImage?.alt || fallback.areaImageAlt;
+
+const galleryImages = data?.galleryImages?.length
+  ? data.galleryImages.map((img) => ({
+      src: urlFor(img).width(700).height(900).fit("crop").auto("format").url(),
+      alt: img.alt || "",
+    }))
+  : fallback.galleryImages;
+
+const features = data?.features?.length ? data.features : fallback.features;
 ---
 
 <BaseLayout
@@ -32,30 +97,42 @@ const galleryTeaser = [
 >
   <Hero
     variant="full"
-    image="https://picsum.photos/seed/santa-libera-hero/2400/1500"
-    imageAlt="Udsigt over vinmarker omkring Casa Santa Libera"
-    eyebrow="Canelli · Piemonte · Italien"
-    title="Charmerende feriehus i hjertet af Piemonte"
-    subtitle="Et hyggeligt hus omgivet af vinmarker og bakker — perfekt til afslapning, ægte italiensk stemning og et glas vin på terrassen."
-    ctaLabel="Kontakt os"
+    image={heroImage}
+    imageAlt={heroImageAlt}
+    eyebrow={data?.heroEyebrow ?? fallback.heroEyebrow}
+    title={data?.heroTitle ?? fallback.heroTitle}
+    subtitle={data?.heroSubtitle ?? fallback.heroSubtitle}
+    ctaLabel={data?.heroCtaLabel ?? fallback.heroCtaLabel}
     ctaHref="/kontakt/"
     showScrollCue
   />
 
   <Section narrow>
-    <p class="eyebrow">Velkommen</p>
-    <h2 class="font-serif section-heading mt-4">Velkommen til Santa Libera</h2>
+    <p class="eyebrow">{data?.welcomeEyebrow ?? fallback.welcomeEyebrow}</p>
+    <h2 class="font-serif section-heading mt-4">
+      {data?.welcomeHeading ?? fallback.welcomeHeading}
+    </h2>
     <div class="lead mt-8">
-      <p>
-        Velkommen til vores hyggelige feriehus beliggende i det smukke vinområde
-        omkring Canelli i det nordlige Italien. Huset ligger i det rolige og
-        naturskønne Santa Libera-område med en fantastisk udsigt over vinmarker
-        og bakker — perfekt til afslapning og ægte italiensk stemning.
-      </p>
-      <p class="mt-5">
-        Boligen er ideel til både familier og grupper, der ønsker en autentisk
-        ferieoplevelse i Piemonte, med god plads og moderne faciliteter.
-      </p>
+      {
+        data?.welcomeBody ? (
+          <PortableText blocks={data.welcomeBody} />
+        ) : (
+          <>
+            <p>
+              Velkommen til vores hyggelige feriehus beliggende i det smukke
+              vinområde omkring Canelli i det nordlige Italien. Huset ligger i det
+              rolige og naturskønne Santa Libera-område med en fantastisk udsigt
+              over vinmarker og bakker — perfekt til afslapning og ægte italiensk
+              stemning.
+            </p>
+            <p class="mt-5">
+              Boligen er ideel til både familier og grupper, der ønsker en
+              autentisk ferieoplevelse i Piemonte, med god plads og moderne
+              faciliteter.
+            </p>
+          </>
+        )
+      }
     </div>
   </Section>
 
@@ -63,21 +140,29 @@ const galleryTeaser = [
     <div class="split">
       <img
         class="aspect-portrait"
-        src="https://picsum.photos/seed/santa-libera-living/900/1100"
-        alt="Stue med pejs i Casa Santa Libera"
+        src={aboutImage}
+        alt={aboutImageAlt}
         loading="lazy"
       />
       <div>
-        <p class="eyebrow">Om boligen</p>
+        <p class="eyebrow">{data?.aboutEyebrow ?? fallback.aboutEyebrow}</p>
         <h2 class="font-serif section-heading mt-4">
-          Klassisk italiensk charme — moderne komfort
+          {data?.aboutHeading ?? fallback.aboutHeading}
         </h2>
-        <p class="lead mt-7">
-          Et totalrenoveret feriehus, hvor moderne faciliteter møder autentisk
-          piemontesisk arkitektur. Fra den hyggelige pejsestue til det unikke
-          vinrum — hvert rum er indrettet til afslapning og ægte italiensk
-          samvær.
-        </p>
+        <div class="lead mt-7">
+          {
+            data?.aboutBody ? (
+              <PortableText blocks={data.aboutBody} />
+            ) : (
+              <p>
+                Et totalrenoveret feriehus, hvor moderne faciliteter møder
+                autentisk piemontesisk arkitektur. Fra den hyggelige pejsestue
+                til det unikke vinrum — hvert rum er indrettet til afslapning og
+                ægte italiensk samvær.
+              </p>
+            )
+          }
+        </div>
         <a href="/galleri/" class="link mt-8">Se galleri</a>
       </div>
     </div>
@@ -87,41 +172,53 @@ const galleryTeaser = [
 
   <Section variant="soft">
     <SectionHeader
-      eyebrow="Galleri"
-      heading="Et glimt af huset"
+      eyebrow={data?.galleryEyebrow ?? fallback.galleryEyebrow}
+      heading={data?.galleryHeading ?? fallback.galleryHeading}
       linkLabel="Se hele galleriet"
       linkHref="/galleri/"
     />
-    <GalleryGrid images={galleryTeaser} columns={4} aspect="portrait" />
+    <GalleryGrid images={galleryImages} columns={4} aspect="portrait" />
   </Section>
 
   <Section variant="olive">
     <div class="split split--reverse">
       <img
         class="aspect-portrait"
-        src="https://picsum.photos/seed/canelli-vineyard/900/1100"
-        alt="Vinmarker omkring Canelli"
+        src={areaImage}
+        alt={areaImageAlt}
         loading="lazy"
       />
       <div>
-        <p class="eyebrow on-dark">Om området</p>
-        <h2 class="font-serif section-heading mt-4">Canelli — italiensk vinkultur</h2>
-        <p class="lead mt-7">
-          Canelli er kendt som en af Italiens vigtigste vinbyer og er især
-          berømt for sine mousserende vine. Byen byder på hyggelige
-          restauranter, vinbarer og historiske vinkældre — bl.a. de
-          UNESCO-beskyttede "underjordiske katedraler".
+        <p class="eyebrow on-dark">
+          {data?.areaEyebrow ?? fallback.areaEyebrow}
         </p>
+        <h2 class="font-serif section-heading mt-4">
+          {data?.areaHeading ?? fallback.areaHeading}
+        </h2>
+        <div class="lead mt-7">
+          {
+            data?.areaBody ? (
+              <PortableText blocks={data.areaBody} />
+            ) : (
+              <p>
+                Canelli er kendt som en af Italiens vigtigste vinbyer og er især
+                berømt for sine mousserende vine. Byen byder på hyggelige
+                restauranter, vinbarer og historiske vinkældre — bl.a. de
+                UNESCO-beskyttede "underjordiske katedraler".
+              </p>
+            )
+          }
+        </div>
         <a href="/canelli/" class="link mt-8">Læs mere om Canelli</a>
       </div>
     </div>
   </Section>
 
   <CTA
-    eyebrow="Book dit ophold"
-    heading="Klar til en ferie i Piemonte?"
-    body="Skriv til os for at høre nærmere om ledige uger, priser og praktiske oplysninger."
-    ctaLabel="Kontakt os"
+    eyebrow={data?.ctaEyebrow ?? fallback.ctaEyebrow}
+    heading={data?.ctaHeading ?? fallback.ctaHeading}
+    body={data?.ctaBody ?? fallback.ctaBody}
+    ctaLabel={data?.ctaLabel ?? fallback.ctaLabel}
     ctaHref="/kontakt/"
     ctaStyle="solid"
   />
