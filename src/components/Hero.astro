@@ -1,0 +1,63 @@
+---
+interface Props {
+  variant?: "full" | "inner";
+  image: string;
+  imageAlt: string;
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  showScrollCue?: boolean;
+}
+
+const {
+  variant = "inner",
+  image,
+  imageAlt,
+  eyebrow,
+  title,
+  subtitle,
+  ctaLabel,
+  ctaHref,
+  showScrollCue = false,
+} = Astro.props;
+
+const minHeight = variant === "full" ? "min-h-screen" : "min-h-[70vh]";
+---
+
+<section
+  class={`relative flex items-center justify-center overflow-hidden px-6 pt-[120px] pb-20 text-center text-[var(--color-cream)] ${minHeight}`}
+>
+  <img
+    class="absolute inset-0 h-full w-full object-cover"
+    src={image}
+    alt={imageAlt}
+  />
+  <div class="hero-overlay absolute inset-0"></div>
+  <div class="relative z-[2] max-w-[880px]">
+    {eyebrow && <p class="eyebrow on-dark">{eyebrow}</p>}
+    <h1 class="font-serif hero-title my-[18px]">{title}</h1>
+    {
+      subtitle && (
+        <p class="mx-auto mb-9 max-w-[640px] text-[clamp(1rem,1.6vw,1.25rem)] font-light leading-relaxed tracking-[0.04em] text-[rgba(244,239,230,0.92)]">
+          {subtitle}
+        </p>
+      )
+    }
+    {
+      ctaLabel && ctaHref && (
+        <a href={ctaHref} class="btn btn--light">
+          {ctaLabel}
+        </a>
+      )
+    }
+  </div>
+  {
+    showScrollCue && (
+      <div class="scroll-cue absolute bottom-8 left-1/2 z-[2] -translate-x-1/2">
+        Opdag mere
+      </div>
+    )
+  }
+</section>

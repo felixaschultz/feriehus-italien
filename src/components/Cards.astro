@@ -1,0 +1,25 @@
+---
+export interface InfoCard {
+  eyebrow: string;
+  title: string;
+  body: string;
+}
+
+interface Props {
+  cards: InfoCard[];
+}
+
+const { cards } = Astro.props;
+---
+
+<div class="cards">
+  {
+    cards.map((card) => (
+      <article class="card">
+        <p class="card__eyebrow">{card.eyebrow}</p>
+        <h3 class="card__title">{card.title}</h3>
+        <p class="card__body">{card.body}</p>
+      </article>
+    ))
+  }
+</div>

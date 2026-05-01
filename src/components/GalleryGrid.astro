@@ -1,0 +1,24 @@
+---
+export interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+  columns?: 3 | 4;
+  aspect?: "portrait" | "landscape";
+}
+
+const { images, columns = 4, aspect = "portrait" } = Astro.props;
+const aspectClass = aspect === "portrait" ? "aspect-portrait" : "aspect-landscape";
+const gridClass = columns === 3 ? "gallery-grid gallery-grid--3" : "gallery-grid";
+---
+
+<div class={gridClass}>
+  {
+    images.map((img) => (
+      <img class={aspectClass} src={img.src} alt={img.alt} loading="lazy" />
+    ))
+  }
+</div>

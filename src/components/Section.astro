@@ -1,0 +1,36 @@
+---
+interface Props {
+  variant?: "default" | "white" | "soft" | "olive" | "charcoal";
+  narrow?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const {
+  variant = "default",
+  narrow = false,
+  class: className = "",
+  id,
+} = Astro.props;
+
+const variantClass = {
+  default: "",
+  white: "section--white",
+  soft: "section--soft",
+  olive: "section--olive",
+  charcoal: "section--charcoal",
+}[variant];
+
+const containerClass = narrow
+  ? "mx-auto max-w-[760px] text-center"
+  : "mx-auto max-w-[1180px]";
+---
+
+<section
+  id={id}
+  class={`section-base ${variantClass} ${className}`.trim()}
+>
+  <div class={containerClass}>
+    <slot />
+  </div>
+</section>

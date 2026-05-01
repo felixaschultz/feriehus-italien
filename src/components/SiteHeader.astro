@@ -1,0 +1,82 @@
+---
+const navLinks = [
+  { href: "/", label: "Hjem" },
+  { href: "/canelli/", label: "Canelli" },
+  { href: "/galleri/", label: "Galleri" },
+  { href: "/kontakt/", label: "Kontakt" },
+  { href: "/faq/", label: "FAQ" },
+];
+---
+
+<header id="site-header">
+  <div class="mx-auto flex max-w-[1280px] items-center justify-between px-8 py-[22px]">
+    <a
+      href="/"
+      class="header-brand text-[20px] tracking-[0.28em] no-underline"
+    >
+      CASA SANTA LIBERA
+    </a>
+    <nav id="site-nav" class="hidden items-center gap-8 md:flex">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-[12px] uppercase tracking-[0.22em] no-underline"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <button
+      id="mobile-toggle"
+      class="border-0 bg-transparent p-2 md:hidden"
+      aria-label="Åbn menu"
+    >
+      ☰
+    </button>
+  </div>
+</header>
+
+<script>
+  let cleanups: Array<() => void> = [];
+
+  function attachHeaderBehaviour() {
+    const header = document.getElementById("site-header");
+    const toggle = document.getElementById("mobile-toggle");
+    const nav = document.getElementById("site-nav");
+
+    if (!header) return;
+
+    const onScroll = () => {
+      if (window.scrollY > 60) {
+        header.classList.add("is-scrolled");
+      } else {
+        header.classList.remove("is-scrolled");
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    cleanups.push(() => window.removeEventListener("scroll", onScroll));
+
+    if (toggle && nav) {
+      const onToggle = () => nav.classList.toggle("is-open");
+      toggle.addEventListener("click", onToggle);
+      cleanups.push(() => toggle.removeEventListener("click", onToggle));
+    }
+
+    // Active nav link highlighting
+    const path = window.location.pathname.replace(/\/$/, "") || "/";
+    document.querySelectorAll<HTMLAnchorElement>("#site-nav a").forEach((link) => {
+      const href = (link.getAttribute("href") || "").replace(/\/$/, "") || "/";
+      link.classList.toggle("is-active", href === path);
+    });
+  }
+
+  document.addEventListener("astro:page-load", attachHeaderBehaviour);
+  document.addEventListener("astro:before-swap", () => {
+    cleanups.forEach((fn) => fn());
+    cleanups = [];
+  });
+</script>

@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Section from "../components/Section.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import FeatureGrid from "../components/FeatureGrid.astro";
+import GalleryGrid from "../components/GalleryGrid.astro";
+import CTA from "../components/CTA.astro";
+
+const features = [
+  { title: "4 soveværelser", description: "Rummelige og lyse" },
+  { title: "2 badeværelser", description: "Nye og moderne" },
+  { title: "Nyt køkken", description: "Fuldt udstyret" },
+  { title: "Stor spisestue", description: "Med tilhørende TV" },
+  { title: "Pejsestue", description: "Hyggelig afslapning" },
+  { title: "Unikt vinrum", description: "Et glas i kølige omgivelser" },
+  { title: "Terrasse", description: "Smuk udsigt over vinlandskabet" },
+  { title: "God parkering", description: "Nem adgang til huset" },
+];
+
+const galleryTeaser = [
+  { src: "https://picsum.photos/seed/casa-gal-1/700/900", alt: "Terrasse" },
+  { src: "https://picsum.photos/seed/casa-gal-2/700/900", alt: "Køkken" },
+  { src: "https://picsum.photos/seed/casa-gal-3/700/900", alt: "Soveværelse" },
+  { src: "https://picsum.photos/seed/casa-gal-4/700/900", alt: "Vinrum" },
+];
+---
+
+<BaseLayout
+  title="Casa Santa Libera — Charmerende feriehus i Piemonte, Italien"
+  description="Hyggeligt feriehus med 4 soveværelser, vinrum og terrasse i Santa Libera ved Canelli, Piemonte. Perfekt til familier og grupper, der vil opleve italiensk vinkultur."
+>
+  <Hero
+    variant="full"
+    image="https://picsum.photos/seed/santa-libera-hero/2400/1500"
+    imageAlt="Udsigt over vinmarker omkring Casa Santa Libera"
+    eyebrow="Canelli · Piemonte · Italien"
+    title="Charmerende feriehus i hjertet af Piemonte"
+    subtitle="Et hyggeligt hus omgivet af vinmarker og bakker — perfekt til afslapning, ægte italiensk stemning og et glas vin på terrassen."
+    ctaLabel="Kontakt os"
+    ctaHref="/kontakt/"
+    showScrollCue
+  />
+
+  <Section narrow>
+    <p class="eyebrow">Velkommen</p>
+    <h2 class="font-serif section-heading mt-4">Velkommen til Santa Libera</h2>
+    <div class="lead mt-8">
+      <p>
+        Velkommen til vores hyggelige feriehus beliggende i det smukke vinområde
+        omkring Canelli i det nordlige Italien. Huset ligger i det rolige og
+        naturskønne Santa Libera-område med en fantastisk udsigt over vinmarker
+        og bakker — perfekt til afslapning og ægte italiensk stemning.
+      </p>
+      <p class="mt-5">
+        Boligen er ideel til både familier og grupper, der ønsker en autentisk
+        ferieoplevelse i Piemonte, med god plads og moderne faciliteter.
+      </p>
+    </div>
+  </Section>
+
+  <Section variant="white">
+    <div class="split">
+      <img
+        class="aspect-portrait"
+        src="https://picsum.photos/seed/santa-libera-living/900/1100"
+        alt="Stue med pejs i Casa Santa Libera"
+        loading="lazy"
+      />
+      <div>
+        <p class="eyebrow">Om boligen</p>
+        <h2 class="font-serif section-heading mt-4">
+          Klassisk italiensk charme — moderne komfort
+        </h2>
+        <p class="lead mt-7">
+          Et totalrenoveret feriehus, hvor moderne faciliteter møder autentisk
+          piemontesisk arkitektur. Fra den hyggelige pejsestue til det unikke
+          vinrum — hvert rum er indrettet til afslapning og ægte italiensk
+          samvær.
+        </p>
+        <a href="/galleri/" class="link mt-8">Se galleri</a>
+      </div>
+    </div>
+
+    <FeatureGrid features={features} />
+  </Section>
+
+  <Section variant="soft">
+    <SectionHeader
+      eyebrow="Galleri"
+      heading="Et glimt af huset"
+      linkLabel="Se hele galleriet"
+      linkHref="/galleri/"
+    />
+    <GalleryGrid images={galleryTeaser} columns={4} aspect="portrait" />
+  </Section>
+
+  <Section variant="olive">
+    <div class="split split--reverse">
+      <img
+        class="aspect-portrait"
+        src="https://picsum.photos/seed/canelli-vineyard/900/1100"
+        alt="Vinmarker omkring Canelli"
+        loading="lazy"
+      />
+      <div>
+        <p class="eyebrow on-dark">Om området</p>
+        <h2 class="font-serif section-heading mt-4">Canelli — italiensk vinkultur</h2>
+        <p class="lead mt-7">
+          Canelli er kendt som en af Italiens vigtigste vinbyer og er især
+          berømt for sine mousserende vine. Byen byder på hyggelige
+          restauranter, vinbarer og historiske vinkældre — bl.a. de
+          UNESCO-beskyttede "underjordiske katedraler".
+        </p>
+        <a href="/canelli/" class="link mt-8">Læs mere om Canelli</a>
+      </div>
+    </div>
+  </Section>
+
+  <CTA
+    eyebrow="Book dit ophold"
+    heading="Klar til en ferie i Piemonte?"
+    body="Skriv til os for at høre nærmere om ledige uger, priser og praktiske oplysninger."
+    ctaLabel="Kontakt os"
+    ctaHref="/kontakt/"
+    ctaStyle="solid"
+  />
+</BaseLayout>

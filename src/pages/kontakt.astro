@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Section from "../components/Section.astro";
+import AddressBlock from "../components/AddressBlock.astro";
+---
+
+<BaseLayout
+  title="Kontakt — Casa Santa Libera"
+  description="Kontakt os for at høre om ledige uger, priser og praktisk information om Casa Santa Libera i Canelli, Piemonte."
+>
+  <Hero
+    image="https://picsum.photos/seed/casa-contact-hero/2400/1300"
+    imageAlt="Kontakt Casa Santa Libera"
+    eyebrow="Kontakt"
+    title="Lad os tale sammen"
+    subtitle="Vi svarer hurtigt på spørgsmål om huset, ledige uger og praktiske oplysninger."
+  />
+
+  <Section>
+    <div class="split">
+      <div>
+        <p class="eyebrow">Send en besked</p>
+        <h2 class="font-serif section-heading mt-4 mb-9">Skriv til os</h2>
+        <form class="contact-form" id="contact-form" novalidate>
+          <div>
+            <label for="name">Navn</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              placeholder="Dit fulde navn"
+            />
+          </div>
+          <div>
+            <label for="email">E-mail</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="dig@eksempel.dk"
+            />
+          </div>
+          <div>
+            <label for="dates">Ønskede datoer (valgfrit)</label>
+            <input
+              id="dates"
+              name="dates"
+              type="text"
+              placeholder="F.eks. 12.–19. juli 2026"
+            />
+          </div>
+          <div>
+            <label for="message">Besked</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              placeholder="Antal personer, særlige ønsker, spørgsmål..."></textarea>
+          </div>
+          <button type="submit" class="btn btn--solid">Send besked</button>
+        </form>
+      </div>
+      <div>
+        <AddressBlock heading="Adresse">
+          <p>Santa Libera-regionen 45</p>
+          <p>14053 Canelli — Asti (AT)</p>
+          <p>Italien</p>
+        </AddressBlock>
+        <AddressBlock heading="Direkte kontakt">
+          <p>
+            E-mail: <a
+              href="mailto:hej@casasantalibera.example"
+              class="text-[var(--color-terracotta)]">hej@casasantalibera.example</a
+            >
+          </p>
+          <p>Telefon: <span class="text-[rgba(45,42,38,0.6)]">tilføjes</span></p>
+        </AddressBlock>
+        <iframe
+          class="map-embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://maps.google.com/maps?q=Canelli%2C%20Asti%2C%20Italy&t=&z=13&ie=UTF8&iwloc=&output=embed"
+          title="Kort over Canelli"></iframe>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    if (!form) return;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert(
+        "Dette er kun en mockup — formularen aktiveres når sitet går live.",
+      );
+    });
+  });
+</script>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTA from "../components/CTA.astro";
+import { faqData } from "../data/faq";
+---
+
+<BaseLayout
+  title="FAQ — Casa Santa Libera"
+  description="Praktisk A–Z-guide til Casa Santa Libera: adresse, affald, afrejse, restauranter, vinproducenter og meget mere."
+>
+  <section class="px-6 pt-[160px] pb-16 text-center">
+    <p class="eyebrow">Praktisk information</p>
+    <h1 class="font-serif my-4 text-[clamp(2.5rem,5vw,4rem)]">
+      FAQ — Gæstehåndbog A til Å
+    </h1>
+    <p class="mx-auto max-w-[640px] leading-[1.7] text-[rgba(45,42,38,0.7)]">
+      Alt det praktiske om jeres ophold på Casa Santa Libera, samlet alfabetisk.
+      Klik på et bogstav for at hoppe direkte til en sektion.
+    </p>
+  </section>
+
+  <nav class="alphabet-nav" aria-label="Alfabetisk navigation">
+    <ul>
+      {
+        faqData.map((letter) => (
+          <li>
+            <a href={`#${letter.id}`}>{letter.letter}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <section class="section-base !pt-0">
+    <div class="mx-auto max-w-[880px]">
+      {
+        faqData.map((letter) => (
+          <div class="faq-letter" id={letter.id}>
+            <h2>{letter.letter}</h2>
+            {letter.entries.map((entry) => (
+              <details class="faq-entry" open={entry.defaultOpen}>
+                <summary>{entry.title}</summary>
+                <div class="faq-entry__body" set:html={entry.body} />
+              </details>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <CTA
+    variant="olive"
+    eyebrow="Mangler der noget?"
+    heading="Skriv til os, vi svarer gerne"
+    body="Sidder I med et spørgsmål, der ikke står på listen? Vi hjælper jer gerne — både før og under jeres ophold."
+    ctaLabel="Kontakt os"
+    ctaHref="/kontakt/"
+    ctaStyle="light"
+  />
+</BaseLayout>

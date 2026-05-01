@@ -1,0 +1,24 @@
+---
+export interface Feature {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  features: Feature[];
+}
+
+const { features } = Astro.props;
+---
+
+<div class="feature-grid">
+  {
+    features.map((feature) => (
+      <div class="feature">
+        <div class="feature__rule" />
+        <h3 class="feature__title">{feature.title}</h3>
+        <p class="feature__desc">{feature.description}</p>
+      </div>
+    ))
+  }
+</div>
