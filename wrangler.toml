@@ -24,7 +24,12 @@
 
 name = "feriehus-italien"
 compatibility_date = "2025-04-01"
-compatibility_flags = ["nodejs_compat"]
+# As of 2025-04-01, Cloudflare defaults to "navigation requests prefer asset serving":
+# full page loads can skip the Worker and fall through to static / 404.html, which
+# breaks SSR routes like Sanity Studio at /studio. This flag restores the prior
+# behaviour (Worker runs when no exact static file exists).
+# https://developers.cloudflare.com/workers/configuration/compatibility-flags/
+compatibility_flags = ["nodejs_compat", "assets_navigation_has_no_effect"]
 pages_build_output_dir = "./dist"
 
 # ----------------------------------------------------------------------------
