@@ -1,5 +1,11 @@
 # Cloudflare Pages configuration for Casa Santa Libera.
 #
+# CRITICAL: `pages_build_output_dir` marks this config as PAGES-shaped. If any
+# CI step runs `wrangler deploy` (Workers), Wrangler aborts with:
+#   "Workers-specific command in a Pages project … run wrangler pages deploy"
+# Fix: use a Cloudflare PAGES project (Git → build only), not Workers Builds;
+# or remove any custom Deploy command that runs `wrangler deploy`.
+#
 # Docs: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
 #
 # IMPORTANT — Pages vs Workers:
