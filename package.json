@@ -12,7 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "cf:pages-build-done": "node -e \"process.exit(0)\""
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",

@@ -157,7 +157,7 @@ The project is configured for Cloudflare Pages via `@astrojs/cloudflare` and a c
 
 ### Via dashboard (required for runtime)
 
-1. Push the repo to GitHub, then in https://dash.cloudflare.com → **Workers & Pages → Create → Connect to Git**, pick the repo.
+1. Push the repo to GitHub, then in https://dash.cloudflare.com → **Workers & Pages → Create → Pages → Connect to Git** (pick **Pages**, not “Import a repository” under **Workers** — Workers Git builds run `wrangler deploy` by default, which conflicts with this repo’s Pages-shaped `wrangler.toml`).
 2. Build settings:
    - Framework preset: **Astro**
    - Build command: `npm run build`
@@ -180,6 +180,29 @@ The `wrangler.toml` at the repo root declares the `PUBLIC_*` vars under `[vars]`
 ### CORS — the one-time Sanity click
 
 After your first production deploy succeeds, open https://www.sanity.io/manage/personal/project/8chs5okk/api → **CORS origins → Add CORS origin** with your Cloudflare URL (and later the custom domain). Tick **Allow credentials**. Without this, `/studio` on production will fail to log in.
+
+### Fix: log shows `Executing user deploy command: npx wrangler deploy`
+
+That line is **not** coming from this repository — Cloudflare is running whatever you put in the dashboard **Deploy command** field. With a Pages-shaped `wrangler.toml` (`pages_build_output_dir`), **`npx wrangler deploy` always fails** (Wrangler blocks Workers deploy on Pages config).
+
+**Do this in the dashboard**
+
+1. **Workers & Pages** → open your project → **Settings** → **Builds** (or **Builds & deployments** → **Build configuration** → **Edit**).
+2. Find **Deploy command** (or **User deploy command** / **Production deploy command**).
+3. **Delete** `npx wrangler deploy` entirely. For **Cloudflare Pages + Git**, the platform already uploads `dist` after a successful build — you normally need **no** separate deploy command.
+4. If the UI will not let the field be empty, set the deploy command to exactly:
+
+   ```bash
+   npm run cf:pages-build-done
+   ```
+
+   That script is a no-op exit 0 in this repo (`package.json`) so the pipeline succeeds while Cloudflare still performs the normal Pages asset upload from **Build output directory** (`dist`).
+
+**Still failing?** Confirm the project is a **Pages** project (create via **Create → Pages → Connect to Git**), not a **Worker** connected to Git — Workers Git builds often pre-fill `npx wrangler deploy`, which conflicts with this repo.
+
+### Troubleshooting: `Workers-specific command in a Pages project` (background)
+
+Wrangler throws this when **`wrangler deploy`** runs while **`pages_build_output_dir`** is set in `wrangler.toml`. The fix is always: **do not run `wrangler deploy`** in the Pages pipeline (see the section above). Do not remove `pages_build_output_dir` just to silence the error while still running `wrangler deploy`.
 
 ## Notes
 

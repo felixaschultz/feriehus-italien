@@ -18,8 +18,11 @@
 #
 # Anything sensitive (API tokens, write keys, etc.) must be added in the
 # dashboard as a "Secret" — never committed here.
+#
+# Must match the Cloudflare Pages project name (Workers & Pages → project
+# title). Wrangler v3.109+ compares this when syncing config / auto-fix PRs.
 
-name = "casa-santa-libera"
+name = "feriehus-italien"
 compatibility_date = "2025-04-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
