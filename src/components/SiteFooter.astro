@@ -1,4 +1,6 @@
 ---
+import { fetchSiteSettings } from "../lib/queries";
+
 const navLinks = [
   { href: "/", label: "Hjem" },
   { href: "/canelli/", label: "Canelli" },
@@ -7,6 +9,16 @@ const navLinks = [
   { href: "/faq/", label: "FAQ" },
 ];
 
+const settings = await fetchSiteSettings();
+const houseName = (settings?.houseName ?? "Casa Santa Libera").toUpperCase();
+const tagline =
+  settings?.tagline ??
+  "Et charmerende feriehus midt i Piemontes vinmarker — mellem ro, udsigt og italiensk livsglæde.";
+const street = settings?.addressStreet ?? "Santa Libera-regionen 45";
+const postal = settings?.addressPostal ?? "14053 Canelli — Asti (AT)";
+const country = settings?.addressCountry ?? "Italien";
+const copyright = settings?.footerCopyright ?? "Casa Santa Libera";
+
 const currentYear = new Date().getFullYear();
 ---
 
@@ -14,11 +26,10 @@ const currentYear = new Date().getFullYear();
   <div class="mx-auto grid max-w-[1180px] gap-14 md:grid-cols-[1.4fr_1fr_1fr]">
     <div>
       <p class="font-serif mb-4 text-[22px] tracking-[0.28em] text-[var(--color-cream)]">
-        CASA SANTA LIBERA
+        {houseName}
       </p>
       <p class="max-w-[320px] leading-[1.7]">
-        Et charmerende feriehus midt i Piemontes vinmarker — mellem ro,
-        udsigt og italiensk livsglæde.
+        {tagline}
       </p>
     </div>
     <div>
@@ -26,9 +37,9 @@ const currentYear = new Date().getFullYear();
         Adresse
       </h4>
       <p class="leading-[1.7]">
-        Santa Libera-regionen 45<br />
-        14053 Canelli — Asti (AT)<br />
-        Italien
+        {street}<br />
+        {postal}<br />
+        {country}
       </p>
     </div>
     <div>
@@ -52,7 +63,7 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
   <div class="mx-auto mt-14 flex max-w-[1180px] flex-wrap justify-between gap-3 border-t border-[rgba(244,239,230,0.1)] pt-6 text-[11px] tracking-[0.08em] text-[rgba(244,239,230,0.45)]">
-    <span>© {currentYear} Casa Santa Libera</span>
+    <span>© {currentYear} {copyright}</span>
     <span>Astro · View Transitions</span>
   </div>
 </footer>

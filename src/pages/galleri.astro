@@ -6,30 +6,66 @@ import Hero from "../components/Hero.astro";
 import Section from "../components/Section.astro";
 import GalleryGrid from "../components/GalleryGrid.astro";
 import CTA from "../components/CTA.astro";
+import { fetchGalleryPage } from "../lib/queries";
+import type { SanityImage } from "../lib/queries";
+import { urlFor } from "../lib/sanity";
 
-const ude = [
-  { src: "https://picsum.photos/seed/casa-ude-1/900/700", alt: "Terrasse med udsigt" },
-  { src: "https://picsum.photos/seed/casa-ude-2/900/700", alt: "Indgang og facade" },
-  { src: "https://picsum.photos/seed/casa-ude-3/900/700", alt: "Have og vinmarker" },
-  { src: "https://picsum.photos/seed/casa-ude-4/900/700", alt: "Solnedgang fra terrassen" },
-  { src: "https://picsum.photos/seed/casa-ude-5/900/700", alt: "Udekøkken" },
-  { src: "https://picsum.photos/seed/casa-ude-6/900/700", alt: "Udsigt over bakker" },
-];
+const data = await fetchGalleryPage();
 
-const inde = [
-  { src: "https://picsum.photos/seed/casa-inde-1/900/700", alt: "Stue med pejs" },
-  { src: "https://picsum.photos/seed/casa-inde-2/900/700", alt: "Køkken" },
-  { src: "https://picsum.photos/seed/casa-inde-3/900/700", alt: "Spisestue" },
-  { src: "https://picsum.photos/seed/casa-inde-4/900/700", alt: "Soveværelse" },
-  { src: "https://picsum.photos/seed/casa-inde-5/900/700", alt: "Badeværelse" },
-  { src: "https://picsum.photos/seed/casa-inde-6/900/700", alt: "Detalje fra entré" },
-];
+// Fallback content used when Sanity isn't configured / populated yet.
+const fallback = {
+  heroTitle: "Et hus i billeder",
+  heroSubtitle: "Tag en visuel rundtur — ude, inde og i det unikke vinrum.",
+  heroImage: "https://picsum.photos/seed/casa-gallery-hero/2400/1300",
+  heroImageAlt: "Galleri — Casa Santa Libera",
 
-const vinrum = [
-  { src: "https://picsum.photos/seed/casa-vin-1/900/700", alt: "Vinrum oversigt" },
-  { src: "https://picsum.photos/seed/casa-vin-2/900/700", alt: "Vinreoler" },
-  { src: "https://picsum.photos/seed/casa-vin-3/900/700", alt: "Smagningsbord" },
-];
+  outside: [
+    { src: "https://picsum.photos/seed/casa-ude-1/900/700", alt: "Terrasse med udsigt" },
+    { src: "https://picsum.photos/seed/casa-ude-2/900/700", alt: "Indgang og facade" },
+    { src: "https://picsum.photos/seed/casa-ude-3/900/700", alt: "Have og vinmarker" },
+    { src: "https://picsum.photos/seed/casa-ude-4/900/700", alt: "Solnedgang fra terrassen" },
+    { src: "https://picsum.photos/seed/casa-ude-5/900/700", alt: "Udekøkken" },
+    { src: "https://picsum.photos/seed/casa-ude-6/900/700", alt: "Udsigt over bakker" },
+  ],
+  inside: [
+    { src: "https://picsum.photos/seed/casa-inde-1/900/700", alt: "Stue med pejs" },
+    { src: "https://picsum.photos/seed/casa-inde-2/900/700", alt: "Køkken" },
+    { src: "https://picsum.photos/seed/casa-inde-3/900/700", alt: "Spisestue" },
+    { src: "https://picsum.photos/seed/casa-inde-4/900/700", alt: "Soveværelse" },
+    { src: "https://picsum.photos/seed/casa-inde-5/900/700", alt: "Badeværelse" },
+    { src: "https://picsum.photos/seed/casa-inde-6/900/700", alt: "Detalje fra entré" },
+  ],
+  wineRoom: [
+    { src: "https://picsum.photos/seed/casa-vin-1/900/700", alt: "Vinrum oversigt" },
+    { src: "https://picsum.photos/seed/casa-vin-2/900/700", alt: "Vinreoler" },
+    { src: "https://picsum.photos/seed/casa-vin-3/900/700", alt: "Smagningsbord" },
+  ],
+
+  ctaHeading: "Klar til en ferie i Piemonte?",
+  ctaBody: "Skriv til os for at høre om ledige uger og priser.",
+  ctaLabel: "Kontakt os",
+};
+
+const heroImage = data?.heroImage
+  ? urlFor(data.heroImage).width(2400).height(1300).fit("crop").auto("format").url()
+  : fallback.heroImage;
+const heroImageAlt = data?.heroImage?.alt || fallback.heroImageAlt;
+
+const toGallery = (images: SanityImage[] | undefined) =>
+  (images ?? []).map((img) => ({
+    src: urlFor(img).width(900).height(700).fit("crop").auto("format").url(),
+    alt: img.alt || "",
+  }));
+
+const outside = data?.outsideImages?.length
+  ? toGallery(data.outsideImages)
+  : fallback.outside;
+const inside = data?.insideImages?.length
+  ? toGallery(data.insideImages)
+  : fallback.inside;
+const wineRoom = data?.wineRoomImages?.length
+  ? toGallery(data.wineRoomImages)
+  : fallback.wineRoom;
 ---
 
 <BaseLayout
@@ -37,42 +73,54 @@ const vinrum = [
   description="Billeder fra Casa Santa Libera — udendørs, indendørs og det unikke vinrum."
 >
   <Hero
-    image="https://picsum.photos/seed/casa-gallery-hero/2400/1300"
-    imageAlt="Galleri — Casa Santa Libera"
+    image={heroImage}
+    imageAlt={heroImageAlt}
     eyebrow="Galleri"
-    title="Et hus i billeder"
-    subtitle="Tag en visuel rundtur — ude, inde og i det unikke vinrum."
+    title={data?.heroTitle ?? fallback.heroTitle}
+    subtitle={data?.heroSubtitle ?? fallback.heroSubtitle}
   />
 
   <Section>
     <nav class="tabs" aria-label="Galleri-sektioner">
-      <a href="#ude">Udenfor</a>
-      <a href="#inde">Indenfor</a>
-      <a href="#vinrum">Vinrum</a>
+      {outside.length > 0 && <a href="#ude">Udenfor</a>}
+      {inside.length > 0 && <a href="#inde">Indenfor</a>}
+      {wineRoom.length > 0 && <a href="#vinrum">Vinrum</a>}
     </nav>
 
-    <div class="gallery-block" id="ude">
-      <h3>Udenfor</h3>
-      <GalleryGrid images={ude} columns={3} aspect="landscape" />
-    </div>
+    {
+      outside.length > 0 && (
+        <div class="gallery-block" id="ude">
+          <h3>Udenfor</h3>
+          <GalleryGrid images={outside} columns={3} aspect="landscape" />
+        </div>
+      )
+    }
 
-    <div class="gallery-block" id="inde">
-      <h3>Indenfor</h3>
-      <GalleryGrid images={inde} columns={3} aspect="landscape" />
-    </div>
+    {
+      inside.length > 0 && (
+        <div class="gallery-block" id="inde">
+          <h3>Indenfor</h3>
+          <GalleryGrid images={inside} columns={3} aspect="landscape" />
+        </div>
+      )
+    }
 
-    <div class="gallery-block" id="vinrum">
-      <h3>Vinrum</h3>
-      <GalleryGrid images={vinrum} columns={3} aspect="landscape" />
-    </div>
+    {
+      wineRoom.length > 0 && (
+        <div class="gallery-block" id="vinrum">
+          <h3>Vinrum</h3>
+          <GalleryGrid images={wineRoom} columns={3} aspect="landscape" />
+        </div>
+      )
+    }
   </Section>
 
   <CTA
     variant="charcoal"
     eyebrow="Kom og oplev det selv"
-    heading="Klar til en ferie i Piemonte?"
-    body="Skriv til os for at høre om ledige uger og priser."
-    ctaLabel="Kontakt os"
+    heading={data?.ctaHeading ?? fallback.ctaHeading}
+    body={data?.ctaBody ?? fallback.ctaBody}
+    ctaLabel={data?.ctaLabel ?? fallback.ctaLabel}
     ctaHref="/kontakt/"
     ctaStyle="light"
   />

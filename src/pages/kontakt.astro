@@ -5,6 +5,51 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Section from "../components/Section.astro";
 import AddressBlock from "../components/AddressBlock.astro";
+import { fetchContactPage, fetchSiteSettings } from "../lib/queries";
+import { urlFor } from "../lib/sanity";
+
+const [data, settings] = await Promise.all([
+  fetchContactPage(),
+  fetchSiteSettings(),
+]);
+
+const fallback = {
+  heroEyebrow: "Kontakt",
+  heroTitle: "Lad os tale sammen",
+  heroSubtitle:
+    "Vi svarer hurtigt på spørgsmål om huset, ledige uger og praktiske oplysninger.",
+  heroImage: "https://picsum.photos/seed/casa-contact-hero/2400/1300",
+  heroImageAlt: "Kontakt Casa Santa Libera",
+
+  formEyebrow: "Send en besked",
+  formHeading: "Skriv til os",
+
+  mapQuery: "Canelli, Asti, Italy",
+};
+
+const settingsFallback = {
+  addressStreet: "Santa Libera-regionen 45",
+  addressPostal: "14053 Canelli — Asti (AT)",
+  addressCountry: "Italien",
+  contactEmail: "hej@casasantalibera.example",
+  contactPhone: "",
+};
+
+const heroImage = data?.heroImage
+  ? urlFor(data.heroImage).width(2400).height(1300).fit("crop").auto("format").url()
+  : fallback.heroImage;
+const heroImageAlt = data?.heroImage?.alt || fallback.heroImageAlt;
+
+const mapQuery = data?.mapQuery || fallback.mapQuery;
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(
+  mapQuery,
+)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+
+const street = settings?.addressStreet ?? settingsFallback.addressStreet;
+const postal = settings?.addressPostal ?? settingsFallback.addressPostal;
+const country = settings?.addressCountry ?? settingsFallback.addressCountry;
+const email = settings?.contactEmail ?? settingsFallback.contactEmail;
+const phone = settings?.contactPhone ?? settingsFallback.contactPhone;
 ---
 
 <BaseLayout
@@ -12,18 +57,20 @@ import AddressBlock from "../components/AddressBlock.astro";
   description="Kontakt os for at høre om ledige uger, priser og praktisk information om Casa Santa Libera i Canelli, Piemonte."
 >
   <Hero
-    image="https://picsum.photos/seed/casa-contact-hero/2400/1300"
-    imageAlt="Kontakt Casa Santa Libera"
-    eyebrow="Kontakt"
-    title="Lad os tale sammen"
-    subtitle="Vi svarer hurtigt på spørgsmål om huset, ledige uger og praktiske oplysninger."
+    image={heroImage}
+    imageAlt={heroImageAlt}
+    eyebrow={data?.heroEyebrow ?? fallback.heroEyebrow}
+    title={data?.heroTitle ?? fallback.heroTitle}
+    subtitle={data?.heroSubtitle ?? fallback.heroSubtitle}
   />
 
   <Section>
     <div class="split">
       <div>
-        <p class="eyebrow">Send en besked</p>
-        <h2 class="font-serif section-heading mt-4 mb-9">Skriv til os</h2>
+        <p class="eyebrow">{data?.formEyebrow ?? fallback.formEyebrow}</p>
+        <h2 class="font-serif section-heading mt-4 mb-9">
+          {data?.formHeading ?? fallback.formHeading}
+        </h2>
         <form class="contact-form" id="contact-form" novalidate>
           <div>
             <label for="name">Navn</label>
@@ -67,25 +114,33 @@ import AddressBlock from "../components/AddressBlock.astro";
       </div>
       <div>
         <AddressBlock heading="Adresse">
-          <p>Santa Libera-regionen 45</p>
-          <p>14053 Canelli — Asti (AT)</p>
-          <p>Italien</p>
+          <p>{street}</p>
+          <p>{postal}</p>
+          <p>{country}</p>
         </AddressBlock>
         <AddressBlock heading="Direkte kontakt">
           <p>
             E-mail: <a
-              href="mailto:hej@casasantalibera.example"
-              class="text-[var(--color-terracotta)]">hej@casasantalibera.example</a
+              href={`mailto:${email}`}
+              class="text-[var(--color-terracotta)]">{email}</a
             >
           </p>
-          <p>Telefon: <span class="text-[rgba(45,42,38,0.6)]">tilføjes</span></p>
+          <p>
+            Telefon: {
+              phone ? (
+                <a href={`tel:${phone.replace(/\s+/g, "")}`} class="text-[var(--color-terracotta)]">{phone}</a>
+              ) : (
+                <span class="text-[rgba(45,42,38,0.6)]">tilføjes</span>
+              )
+            }
+          </p>
         </AddressBlock>
         <iframe
           class="map-embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          src="https://maps.google.com/maps?q=Canelli%2C%20Asti%2C%20Italy&t=&z=13&ie=UTF8&iwloc=&output=embed"
-          title="Kort over Canelli"></iframe>
+          src={mapSrc}
+          title={`Kort over ${mapQuery}`}></iframe>
       </div>
     </div>
   </Section>

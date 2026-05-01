@@ -3,7 +3,68 @@ export const prerender = true;
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CTA from "../components/CTA.astro";
+import PortableText from "../components/PortableText.astro";
 import { faqData } from "../data/faq";
+import { fetchFaqPage } from "../lib/queries";
+
+const data = await fetchFaqPage();
+
+const fallback = {
+  introEyebrow: "Praktisk information",
+  introHeading: "FAQ — Gæstehåndbog A til Å",
+  introBody:
+    "Alt det praktiske om jeres ophold på Casa Santa Libera, samlet alfabetisk. Klik på et bogstav for at hoppe direkte til en sektion.",
+
+  ctaEyebrow: "Mangler der noget?",
+  ctaHeading: "Skriv til os, vi svarer gerne",
+  ctaBody:
+    "Sidder I med et spørgsmål, der ikke står på listen? Vi hjælper jer gerne — både før og under jeres ophold.",
+  ctaLabel: "Kontakt os",
+};
+
+// Build the list of letters for the alphabet nav + content sections.
+// When Sanity content is available, we map it into the same shape the page
+// already renders. Otherwise we fall back to the hardcoded `faqData`.
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/æ/g, "ae")
+    .replace(/ø/g, "oe")
+    .replace(/å/g, "aa")
+    .replace(/[^a-z0-9]/g, "");
+
+interface RenderedEntry {
+  title: string;
+  defaultOpen?: boolean;
+  /** Either a pre-rendered HTML string (fallback) or Portable Text blocks (Sanity). */
+  html?: string;
+  blocks?: import("../lib/queries").FaqEntryData["body"];
+}
+interface RenderedLetter {
+  letter: string;
+  id: string;
+  entries: RenderedEntry[];
+}
+
+const sections: RenderedLetter[] = data?.letters?.length
+  ? data.letters.map((l) => ({
+      letter: l.letter.toUpperCase(),
+      id: slugify(l.letter) || "x",
+      entries: (l.entries || []).map((e) => ({
+        title: e.title,
+        defaultOpen: e.defaultOpen,
+        blocks: e.body,
+      })),
+    }))
+  : faqData.map((l) => ({
+      letter: l.letter,
+      id: l.id,
+      entries: l.entries.map((e) => ({
+        title: e.title,
+        defaultOpen: e.defaultOpen,
+        html: e.body,
+      })),
+    }));
 ---
 
 <BaseLayout
@@ -11,20 +72,19 @@ import { faqData } from "../data/faq";
   description="Praktisk A–Z-guide til Casa Santa Libera: adresse, affald, afrejse, restauranter, vinproducenter og meget mere."
 >
   <section class="px-6 pt-[160px] pb-16 text-center">
-    <p class="eyebrow">Praktisk information</p>
+    <p class="eyebrow">{data?.introEyebrow ?? fallback.introEyebrow}</p>
     <h1 class="font-serif my-4 text-[clamp(2.5rem,5vw,4rem)]">
-      FAQ — Gæstehåndbog A til Å
+      {data?.introHeading ?? fallback.introHeading}
     </h1>
     <p class="mx-auto max-w-[640px] leading-[1.7] text-[rgba(45,42,38,0.7)]">
-      Alt det praktiske om jeres ophold på Casa Santa Libera, samlet alfabetisk.
-      Klik på et bogstav for at hoppe direkte til en sektion.
+      {data?.introBody ?? fallback.introBody}
     </p>
   </section>
 
   <nav class="alphabet-nav" aria-label="Alfabetisk navigation">
     <ul>
       {
-        faqData.map((letter) => (
+        sections.map((letter) => (
           <li>
             <a href={`#${letter.id}`}>{letter.letter}</a>
           </li>
@@ -36,13 +96,19 @@ import { faqData } from "../data/faq";
   <section class="section-base !pt-0">
     <div class="mx-auto max-w-[880px]">
       {
-        faqData.map((letter) => (
+        sections.map((letter) => (
           <div class="faq-letter" id={letter.id}>
             <h2>{letter.letter}</h2>
             {letter.entries.map((entry) => (
               <details class="faq-entry" open={entry.defaultOpen}>
                 <summary>{entry.title}</summary>
-                <div class="faq-entry__body" set:html={entry.body} />
+                <div class="faq-entry__body">
+                  {entry.blocks ? (
+                    <PortableText blocks={entry.blocks} />
+                  ) : (
+                    <div set:html={entry.html} />
+                  )}
+                </div>
               </details>
             ))}
           </div>
@@ -53,10 +119,10 @@ import { faqData } from "../data/faq";
 
   <CTA
     variant="olive"
-    eyebrow="Mangler der noget?"
-    heading="Skriv til os, vi svarer gerne"
-    body="Sidder I med et spørgsmål, der ikke står på listen? Vi hjælper jer gerne — både før og under jeres ophold."
-    ctaLabel="Kontakt os"
+    eyebrow={data?.ctaEyebrow ?? fallback.ctaEyebrow}
+    heading={data?.ctaHeading ?? fallback.ctaHeading}
+    body={data?.ctaBody ?? fallback.ctaBody}
+    ctaLabel={data?.ctaLabel ?? fallback.ctaLabel}
     ctaHref="/kontakt/"
     ctaStyle="light"
   />
