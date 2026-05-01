@@ -175,7 +175,7 @@ The project is configured for Cloudflare Pages via `@astrojs/cloudflare` and a c
 
 ### Via `wrangler.toml` (already committed)
 
-The `wrangler.toml` at the repo root already declares both `PUBLIC_*` vars under `[vars]` and `[env.preview.vars]`, so when you point Cloudflare Pages at this repo it picks them up automatically. The dashboard method above is still required for `NODE_VERSION` (Cloudflare reads that one from the dashboard, not `wrangler.toml`).
+The `wrangler.toml` at the repo root declares the `PUBLIC_*` vars under `[vars]`, so they're applied to all deploys. **Do not use `[env.preview]` blocks** — Cloudflare Pages doesn't support `[env.X]` (only Workers does). Per-environment overrides for Preview must be set in the dashboard. The dashboard method above is also still required for `NODE_VERSION` (Cloudflare reads that one from the dashboard, not `wrangler.toml`).
 
 ### CORS — the one-time Sanity click
 
