@@ -7,6 +7,13 @@ import cloudflare from "@astrojs/cloudflare";
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || "placeholder";
 const dataset = process.env.PUBLIC_SANITY_DATASET || "production";
 
+// @astrojs/cloudflare aliases react-dom/server → server.browser (MessageChannel).
+// Workers/workerd has no MessageChannel — React's edge bundle uses web streams instead.
+// https://github.com/withastro/astro/issues/12824
+const reactDomServerEdgeAlias = import.meta.env.PROD
+  ? { "react-dom/server": "react-dom/server.edge" }
+  : null;
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://casasantalibera.example",
@@ -34,5 +41,11 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      alias: reactDomServerEdgeAlias ?? {},
+    },
+    ssr: {
+      alias: reactDomServerEdgeAlias ?? {},
+    },
   },
 });

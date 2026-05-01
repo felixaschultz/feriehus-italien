@@ -13,7 +13,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "cf:pages-build-done": "node -e \"process.exit(0)\""
+    "cf:pages-build-done": "node -e \"process.exit(0)\"",
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",

@@ -1,51 +1,38 @@
-# Cloudflare Pages configuration for Casa Santa Libera.
+# Cloudflare Workers configuration — Casa Santa Libera (Astro SSR + static assets).
 #
-# CRITICAL: `pages_build_output_dir` marks this config as PAGES-shaped. If any
-# CI step runs `wrangler deploy` (Workers), Wrangler aborts with:
-#   "Workers-specific command in a Pages project … run wrangler pages deploy"
-# Fix: use a Cloudflare PAGES project (Git → build only), not Workers Builds;
-# or remove any custom Deploy command that runs `wrangler deploy`.
+# Deploy: `npm run build && npx wrangler deploy`
 #
-# Docs: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+# Do NOT set `pages_build_output_dir` here if you use `wrangler deploy`: that key
+# marks the project as Cloudflare Pages-only and Wrangler refuses Workers deploy.
 #
-# IMPORTANT — Pages vs Workers:
-#   Cloudflare Pages and Workers share the same wrangler.toml schema, but Pages
-#   does NOT support [env.X] blocks. Per-environment overrides (Production vs
-#   Preview) for variables and bindings must be configured in the Cloudflare
-#   dashboard:
-#     Project → Settings → Variables and Secrets
-#     Project → Settings → Bindings
+# If you switch back to Cloudflare Pages (Git UI): remove `main` and `[assets]`,
+# restore `pages_build_output_dir = "./dist"`, and use dashboard builds or
+# `wrangler pages deploy ./dist`.
 #
-# Anything sensitive (API tokens, write keys, etc.) must be added in the
-# dashboard as a "Secret" — never committed here.
-#
-# Must match the Cloudflare Pages project name (Workers & Pages → project
-# title). Wrangler v3.109+ compares this when syncing config / auto-fix PRs.
+# Docs: https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/
 
 name = "feriehus-italien"
+main = "./dist/_worker.js/index.js"
 compatibility_date = "2025-04-01"
-# As of 2025-04-01, Cloudflare defaults to "navigation requests prefer asset serving":
-# full page loads can skip the Worker and fall through to static / 404.html, which
-# breaks SSR routes like Sanity Studio at /studio. This flag restores the prior
-# behaviour (Worker runs when no exact static file exists).
-# https://developers.cloudflare.com/workers/configuration/compatibility-flags/
 compatibility_flags = ["nodejs_compat", "assets_navigation_has_no_effect"]
-pages_build_output_dir = "./dist"
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+# Every request hits the Astro worker first; it delegates prerendered HTML / files
+# to the asset binding. Fixes SSR routes (/studio) being skipped by asset routing.
+run_worker_first = true
 
 # ----------------------------------------------------------------------------
-# Public variables (apply to all environments unless overridden in dashboard)
+# Public variables (override per-env in the dashboard if needed)
 # ----------------------------------------------------------------------------
 [vars]
 PUBLIC_SANITY_PROJECT_ID = "8chs5okk"
 PUBLIC_SANITY_DATASET = "production"
 
 # ----------------------------------------------------------------------------
-# KV namespace for Astro sessions (used by /studio).
-# Until you create the namespace, /studio still loads but session-backed
-# features are no-ops. To wire it up:
-#   1. wrangler kv namespace create SESSION
-#   2. paste the returned id below and uncomment
-#   3. (or create it in the dashboard: Workers & Pages → KV → Create)
+# KV for Astro Sessions (adapter default binding name: SESSION).
+# Create once: `npx wrangler kv namespace create SESSION`, paste id below, uncomment.
 # ----------------------------------------------------------------------------
 # [[kv_namespaces]]
 # binding = "SESSION"
