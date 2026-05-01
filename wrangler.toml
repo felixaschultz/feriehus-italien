@@ -1,0 +1,41 @@
+# Cloudflare Pages / Workers config for Casa Santa Libera.
+#
+# This file is read by both:
+#   • the @astrojs/cloudflare adapter at build time (to know about KV bindings)
+#   • Cloudflare Pages at runtime (when you set "Use wrangler.toml" in
+#     dashboard → Settings → Build configuration)
+#
+# Public (PUBLIC_*) env vars defined here are also baked into the production
+# build, so you do NOT need to duplicate them in the Cloudflare dashboard
+# unless you prefer to manage them there. Anything sensitive (API tokens,
+# secrets) must be added in the dashboard as a "Secret", never here.
+
+name = "casa-santa-libera"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+# ----------------------------------------------------------------------------
+# Production
+# ----------------------------------------------------------------------------
+[vars]
+PUBLIC_SANITY_PROJECT_ID = "8chs5okk"
+PUBLIC_SANITY_DATASET = "production"
+
+# Sessions for the Sanity Studio route. The @astrojs/cloudflare adapter
+# requires a KV namespace named SESSION. After your first push:
+#   1. wrangler kv namespace create SESSION
+#   2. paste the returned id below
+# (Or create it in the dashboard: Workers & Pages → KV → Create.)
+# Until you do this, /studio will still load on the Pages preview but
+# session-backed features will be no-ops.
+# [[kv_namespaces]]
+# binding = "SESSION"
+# id = "<paste-id-here>"
+
+# ----------------------------------------------------------------------------
+# Preview / branch deploys (PRs, non-main branches)
+# ----------------------------------------------------------------------------
+[env.preview.vars]
+PUBLIC_SANITY_PROJECT_ID = "8chs5okk"
+PUBLIC_SANITY_DATASET = "production"

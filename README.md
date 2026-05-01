@@ -147,9 +147,39 @@ Defined in `src/styles/global.css` via Tailwind 4's `@theme` directive:
 - [x] **Phase 1** — Static HTML mockup (`mockup/`, kept for reference).
 - [x] **Phase 2** — Astro skeleton with reusable components and View Transitions.
 - [x] **Phase 3** — Sanity Studio at `/studio` with locked-field schemas (singletons, validation, hotspot crop).
-- [ ] **Phase 4** — Wire the remaining 4 pages (canelli, galleri, kontakt, faq) to Sanity content.
+- [x] **Phase 4** — Wire all pages (canelli, galleri, kontakt, faq) to Sanity content with safe fallbacks.
 - [ ] **Phase 5** — Contact form via Web3Forms (free, no backend).
 - [ ] **Phase 6** — Deploy to Cloudflare Pages, attach custom domain, set up Sanity → Cloudflare deploy hook, write 1-page owner guide (PDF).
+
+## Deploying to Cloudflare Pages
+
+The project is configured for Cloudflare Pages via `@astrojs/cloudflare` and a committed `wrangler.toml`. Two ways to set up env vars on the production deploy:
+
+### Via dashboard (required for runtime)
+
+1. Push the repo to GitHub, then in https://dash.cloudflare.com → **Workers & Pages → Create → Connect to Git**, pick the repo.
+2. Build settings:
+   - Framework preset: **Astro**
+   - Build command: `npm run build`
+   - Build output: `dist`
+   - Node version: `20` (set in **Settings → Environment variables → Production** as `NODE_VERSION = 20`)
+3. **Settings → Environment variables**, add to **both Production and Preview**:
+
+   | Variable | Value | Type |
+   |---|---|---|
+   | `PUBLIC_SANITY_PROJECT_ID` | `8chs5okk` | Plaintext |
+   | `PUBLIC_SANITY_DATASET` | `production` | Plaintext |
+   | `NODE_VERSION` | `20` | Plaintext |
+
+4. **Re-deploy** — env-var changes don't affect existing deployments.
+
+### Via `wrangler.toml` (already committed)
+
+The `wrangler.toml` at the repo root already declares both `PUBLIC_*` vars under `[vars]` and `[env.preview.vars]`, so when you point Cloudflare Pages at this repo it picks them up automatically. The dashboard method above is still required for `NODE_VERSION` (Cloudflare reads that one from the dashboard, not `wrangler.toml`).
+
+### CORS — the one-time Sanity click
+
+After your first production deploy succeeds, open https://www.sanity.io/manage/personal/project/8chs5okk/api → **CORS origins → Add CORS origin** with your Cloudflare URL (and later the custom domain). Tick **Allow credentials**. Without this, `/studio` on production will fail to log in.
 
 ## Notes
 
