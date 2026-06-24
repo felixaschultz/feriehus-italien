@@ -8,9 +8,11 @@ import SectionHeader from "../components/SectionHeader.astro";
 import FeatureGrid from "../components/FeatureGrid.astro";
 import GalleryGrid from "../components/GalleryGrid.astro";
 import PortableText from "../components/PortableText.astro";
+import AddressBlock from "../components/AddressBlock.astro";
 import CTA from "../components/CTA.astro";
 import { fetchHomepage } from "../lib/queries";
 import { urlFor } from "../lib/sanity";
+import { homepageGalleryPreview } from "../lib/galleryAssets";
 
 const data = await fetchHomepage();
 
@@ -19,9 +21,9 @@ const data = await fetchHomepage();
 // content takes over automatically.
 const fallback = {
   heroEyebrow: "Canelli · Piemonte · Italien",
-  heroTitle: "Charmerende feriehus i hjertet af Piemonte",
+  heroTitle: "Charmerende feriehus i hjertet af Piemonte – Canelli, Italien",
   heroSubtitle:
-    "Et hyggeligt hus omgivet af vinmarker og bakker — perfekt til afslapning, ægte italiensk stemning og et glas vin på terrassen.",
+    "Hyggeligt feriehus i Santa Libera med udsigt over vinmarker og bakker – perfekt til afslapning og ægte italiensk stemning.",
   heroImage: "https://picsum.photos/seed/santa-libera-hero/2400/1500",
   heroImageAlt: "Udsigt over vinmarker omkring Casa Santa Libera",
   heroCtaLabel: "Kontakt os",
@@ -30,39 +32,41 @@ const fallback = {
   welcomeHeading: "Velkommen til Santa Libera",
 
   aboutEyebrow: "Om boligen",
-  aboutHeading: "Klassisk italiensk charme — moderne komfort",
+  aboutHeading: "Plads, komfort og piemontesisk charme",
   aboutImage: "https://picsum.photos/seed/santa-libera-living/900/1100",
   aboutImageAlt: "Stue med pejs i Casa Santa Libera",
 
   features: [
-    { title: "4 soveværelser", description: "Rummelige og lyse" },
-    { title: "2 badeværelser", description: "Nye og moderne" },
-    { title: "Nyt køkken", description: "Fuldt udstyret" },
+    { title: "4 rummelige soveværelser", description: "God plads til familier og grupper" },
+    { title: "2 nye badeværelser", description: "Moderne og indbydende" },
+    { title: "Nyt køkken", description: "Fuldt udstyret til hverdagen på ferie" },
     { title: "Stor spisestue", description: "Med tilhørende TV" },
-    { title: "Pejsestue", description: "Hyggelig afslapning" },
-    { title: "Unikt vinrum", description: "Et glas i kølige omgivelser" },
-    { title: "Terrasse", description: "Smuk udsigt over vinlandskabet" },
-    { title: "God parkering", description: "Nem adgang til huset" },
+    { title: "Pejsestue", description: "Hyggelig afslapning efter en dag i vinmarkerne" },
+    {
+      title: "Unikt vinrum",
+      description:
+        "Nyd et par glas vin i kølige omgivelser på varme dage",
+    },
+    {
+      title: "Terrasse og udendørsområde",
+      description: "Smuk udsigt over vinlandskabet",
+    },
+    { title: "Parkering", description: "Nem adgang og gode parkeringsforhold" },
   ],
 
   galleryEyebrow: "Galleri",
   galleryHeading: "Et glimt af huset",
-  galleryImages: [
-    { src: "https://picsum.photos/seed/casa-gal-1/700/900", alt: "Terrasse" },
-    { src: "https://picsum.photos/seed/casa-gal-2/700/900", alt: "Køkken" },
-    { src: "https://picsum.photos/seed/casa-gal-3/700/900", alt: "Soveværelse" },
-    { src: "https://picsum.photos/seed/casa-gal-4/700/900", alt: "Vinrum" },
-  ],
+  galleryImages: homepageGalleryPreview,
 
   areaEyebrow: "Om området",
-  areaHeading: "Canelli — italiensk vinkultur",
+  areaHeading: "Canelli og Piemonte",
   areaImage: "https://picsum.photos/seed/canelli-vineyard/900/1100",
   areaImageAlt: "Vinmarker omkring Canelli",
 
   ctaEyebrow: "Book dit ophold",
   ctaHeading: "Klar til en ferie i Piemonte?",
   ctaBody:
-    "Skriv til os for at høre nærmere om ledige uger, priser og praktiske oplysninger.",
+    "Dette feriehus er det perfekte valg for dig, der ønsker en afslappende ferie i smukke omgivelser – med vin, natur og italiensk livsglæde lige uden for døren.",
   ctaLabel: "Kontakt os",
 };
 
@@ -122,9 +126,15 @@ const features = data?.features?.length ? data.features : fallback.features;
               Velkommen til vores hyggelige feriehus beliggende i det smukke
               vinområde omkring Canelli i det nordlige Italien. Huset ligger i det
               rolige og naturskønne Santa Libera-område med en fantastisk udsigt
-              over vinmarker og bakker — perfekt til afslapning og ægte italiensk
+              over vinmarker og bakker – perfekt til afslapning og ægte italiensk
               stemning.
             </p>
+            <div class="mt-8">
+              <AddressBlock heading="Adresse (til GPS)">
+                <p>Santa Libera-regionen 45</p>
+                <p>14053 Canelli – Asti (AT), Italien</p>
+              </AddressBlock>
+            </div>
             <p class="mt-5">
               Boligen er ideel til både familier og grupper, der ønsker en
               autentisk ferieoplevelse i Piemonte, med god plads og moderne
@@ -155,10 +165,9 @@ const features = data?.features?.length ? data.features : fallback.features;
               <PortableText blocks={data.aboutBody} />
             ) : (
               <p>
-                Et totalrenoveret feriehus, hvor moderne faciliteter møder
-                autentisk piemontesisk arkitektur. Fra den hyggelige pejsestue
-                til det unikke vinrum — hvert rum er indrettet til afslapning og
-                ægte italiensk samvær.
+                Et hyggeligt feriehus med alt, hvad I behøver til en autentisk
+                ferie i Piemonte – fra den hyggelige pejsestue til det unikke
+                vinrum og terrassen med udsigt over vinlandskabet.
               </p>
             )
           }
@@ -200,12 +209,29 @@ const features = data?.features?.length ? data.features : fallback.features;
             data?.areaBody ? (
               <PortableText blocks={data.areaBody} />
             ) : (
-              <p>
-                Canelli er kendt som en af Italiens vigtigste vinbyer og er især
-                berømt for sine mousserende vine. Byen byder på hyggelige
-                restauranter, vinbarer og historiske vinkældre — bl.a. de
-                UNESCO-beskyttede "underjordiske katedraler".
-              </p>
+              <>
+                <p>
+                  Canelli er kendt som en af Italiens vigtigste vinbyer og er
+                  især berømt for sine mousserende vine. Byen byder på hyggelige
+                  restauranter, vinbarer og historiske vinkældre – bl.a. de
+                  UNESCO-beskyttede «underjordiske katedraler».
+                </p>
+                <p class="mt-5">
+                  Derudover er huset et perfekt udgangspunkt for oplevelser i
+                  Piemonte:
+                </p>
+                <ul class="mt-4 list-disc space-y-2 pl-5">
+                  <li>Besøg vingårde og vinsmagninger i verdensklasse</li>
+                  <li>Udforsk charmerende byer som Asti og Alba</li>
+                  <li>
+                    Nyd naturen med cykling og vandreture i de kuperede
+                    landskaber
+                  </li>
+                  <li>
+                    Oplev lokale markeder og italiensk gastronomi i topklasse
+                  </li>
+                </ul>
+              </>
             )
           }
         </div>
