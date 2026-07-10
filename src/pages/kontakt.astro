@@ -28,11 +28,15 @@ const fallback = {
 };
 
 const settingsFallback = {
-  addressStreet: "Santa Libera-regionen 45",
+  addressStreet: "Santa Libera-regionen 47",
   addressPostal: "14053 Canelli — Asti (AT)",
   addressCountry: "Italien",
-  contactEmail: "hej@casasantalibera.example",
-  contactPhone: "",
+  contact1Name: "Lars",
+  contactEmail: "Lbejendomme@gmail.com",
+  contactPhone: "+45 28 70 87 81",
+  contact2Name: "Hans",
+  contact2Email: "info@flytteboxen.dk",
+  contact2Phone: "+45 30 95 18 48",
 };
 
 const heroImage = data?.heroImage
@@ -48,8 +52,14 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(
 const street = settings?.addressStreet ?? settingsFallback.addressStreet;
 const postal = settings?.addressPostal ?? settingsFallback.addressPostal;
 const country = settings?.addressCountry ?? settingsFallback.addressCountry;
+
+const contact1Name = settings?.contact1Name ?? settingsFallback.contact1Name;
 const email = settings?.contactEmail ?? settingsFallback.contactEmail;
 const phone = settings?.contactPhone ?? settingsFallback.contactPhone;
+
+const contact2Name = settings?.contact2Name ?? settingsFallback.contact2Name;
+const email2 = settings?.contact2Email ?? settingsFallback.contact2Email;
+const phone2 = settings?.contact2Phone ?? settingsFallback.contact2Phone;
 ---
 
 <BaseLayout
@@ -117,22 +127,52 @@ const phone = settings?.contactPhone ?? settingsFallback.contactPhone;
           <p>{street}</p>
           <p>{postal}</p>
           <p>{country}</p>
+          <p class="mt-3 text-sm text-[rgba(45,42,38,0.6)]">
+            Til GPS-navigation: Santa Libera-regionen 45, 14053 Canelli
+          </p>
         </AddressBlock>
         <AddressBlock heading="Direkte kontakt">
+          <div class="space-y-3">
+            <div>
+              <p class="font-medium">{contact1Name}</p>
+              <p>
+                <a href={`mailto:${email}`} class="text-[var(--color-terracotta)]">{email}</a>
+              </p>
+              {phone && (
+                <p>
+                  <a href={`tel:${phone.replace(/\s+/g, "")}`} class="text-[var(--color-terracotta)]">{phone}</a>
+                </p>
+              )}
+            </div>
+            {(email2 || phone2) && (
+              <div>
+                <p class="font-medium">{contact2Name}</p>
+                {email2 && (
+                  <p>
+                    <a href={`mailto:${email2}`} class="text-[var(--color-terracotta)]">{email2}</a>
+                  </p>
+                )}
+                {phone2 && (
+                  <p>
+                    <a href={`tel:${phone2.replace(/\s+/g, "")}`} class="text-[var(--color-terracotta)]">{phone2}</a>
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </AddressBlock>
+        <AddressBlock heading="Find huset">
           <p>
-            E-mail: <a
-              href={`mailto:${email}`}
-              class="text-[var(--color-terracotta)]">{email}</a
+            Vores nabo{" "}
+            <a
+              href="https://vinibocchino.it/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[var(--color-terracotta)]"
             >
-          </p>
-          <p>
-            Telefon: {
-              phone ? (
-                <a href={`tel:${phone.replace(/\s+/g, "")}`} class="text-[var(--color-terracotta)]">{phone}</a>
-              ) : (
-                <span class="text-[rgba(45,42,38,0.6)]">tilføjes</span>
-              )
-            }
+              Vini Bocchino
+            </a>{" "}
+            (Santa Libera-regionen 43) hjælper gerne med at finde huset.
           </p>
         </AddressBlock>
         <iframe
@@ -149,12 +189,38 @@ const phone = settings?.contactPhone ?? settingsFallback.contactPhone;
 <script>
   document.addEventListener("astro:page-load", () => {
     const form = document.getElementById("contact-form") as HTMLFormElement | null;
-    if (!form) return;
-    form.addEventListener("submit", (e) => {
+    const btn = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    if (!form || !btn) return;
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert(
-        "Dette er kun en mockup — formularen aktiveres når sitet går live.",
-      );
+
+      const data = Object.fromEntries(new FormData(form));
+      btn.disabled = true;
+      const originalLabel = btn.textContent ?? "Send besked";
+      btn.textContent = "Sender…";
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          form.innerHTML =
+            '<p class="success-message">Tak for din besked! Vi vender tilbage hurtigst muligt.</p>';
+        } else {
+          const payload = await res.json().catch(() => ({})) as { error?: string };
+          alert(payload.error ?? "Der opstod en fejl — prøv igen eller skriv direkte til os.");
+          btn.disabled = false;
+          btn.textContent = originalLabel;
+        }
+      } catch {
+        alert("Der opstod en fejl — prøv igen eller skriv direkte til os.");
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
     });
   });
 </script>

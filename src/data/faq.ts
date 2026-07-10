@@ -23,7 +23,7 @@ export const faqData: FaqLetter[] = [
         defaultOpen: true,
         body: `
           <p>Hvis adressen bruges i elektronisk vejvisning:</p>
-          <p><strong>Santa Libera-regionen 45</strong><br />14053 Canelli — Asti (AT), Italien</p>
+          <p><strong>Santa Libera-regionen 47</strong><br />14053 Canelli — Asti (AT), Italien</p>
           <p>Vores nabo er <a href="https://vinibocchino.it/" target="_blank" rel="noopener noreferrer" style="${tc}">vinibocchino.it</a> — de hjælper gerne med at finde vores hus.</p>
         `,
       },

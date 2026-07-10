@@ -35,6 +35,11 @@ PUBLIC_SANITY_PROJECT_ID = "8chs5okk"
 PUBLIC_SANITY_DATASET = "production"
 
 # ----------------------------------------------------------------------------
+# Secrets (NOT stored here — add via `wrangler secret put <NAME>`)
+# ----------------------------------------------------------------------------
+# RESEND_API_KEY  — Resend email API key for the contact form (https://resend.com)
+
+# ----------------------------------------------------------------------------
 # KV for Astro Sessions (adapter default binding name: SESSION).
 # Create once: `npx wrangler kv namespace create SESSION`, paste id below, uncomment.
 # ----------------------------------------------------------------------------

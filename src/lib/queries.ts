@@ -83,8 +83,12 @@ export const fetchHomepage = () => fetchOptional<HomepageData>(homepageQuery);
 export interface SiteSettingsData {
   houseName: string;
   tagline?: string;
+  contact1Name?: string;
   contactEmail: string;
   contactPhone?: string;
+  contact2Name?: string;
+  contact2Email?: string;
+  contact2Phone?: string;
   addressStreet: string;
   addressPostal: string;
   addressCountry: string;
@@ -95,8 +99,12 @@ export const siteSettingsQuery = /* groq */ `
   *[_type == "siteSettings" && _id == "siteSettings"][0]{
     houseName,
     tagline,
+    contact1Name,
     contactEmail,
     contactPhone,
+    contact2Name,
+    contact2Email,
+    contact2Phone,
     addressStreet,
     addressPostal,
     addressCountry,
