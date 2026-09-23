@@ -12,6 +12,8 @@ import { fetchCanelliPage } from "../lib/queries";
 import { urlFor } from "../lib/sanity";
 import canelliHeroImg from "../assets/IMG_2298.jpeg";
 import santaLiberaImg from "../assets/feriehus-outdoor.jpg";
+import alpsPanoramaImg from "../assets/canelli/alps-panorama.jpg";
+import alpsMonvisoImg from "../assets/canelli/alps-monviso.jpg";
 
 const data = await fetchCanelliPage();
 
@@ -33,6 +35,31 @@ const fallback = {
     "Roligt og naturskønt — ganske få minutter fra centrum",
   santaLiberaImage: santaLiberaImg.src,
   santaLiberaImageAlt: "Vinmarker i Santa Libera-området ved Canelli",
+
+  cathedralsEyebrow: "UNESCO-arv",
+  cathedralsHeading: "De underjordiske katedraler i Canelli",
+  cathedralsHouses: [
+    {
+      eyebrow: "Siden 1831",
+      title: "Bosca",
+      body: "Et af de ældste vinhuse i Canelli, kendt for sine mousserende vine og de imponerende kælderhvælv, der kan besøges efter aftale.",
+    },
+    {
+      eyebrow: "Siden 1850",
+      title: "Gancia",
+      body: "Grundlagt af Carlo Gancia, manden bag Italiens allerførste mousserende vin i 1865, efter han lærte metoden at kende i Reims.",
+    },
+    {
+      eyebrow: "Siden 1867",
+      title: "Contratto",
+      body: "Kendt for sin klassiske metode og de historiske kældergange, som stadig bruges til modning af husets spumante.",
+    },
+    {
+      eyebrow: "Siden 1892",
+      title: "Coppo",
+      body: "Et af Piemontes toneangivende vinhuse, med rødder dybt i den lokale vinkultur og egne underjordiske kældre.",
+    },
+  ],
 
   experiencesEyebrow: "Oplev Piemonte",
   experiencesHeading: "Hvad du kan opleve",
@@ -128,6 +155,65 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(
   </Section>
 
   <Section variant="white">
+    <SectionHeader
+      eyebrow={fallback.cathedralsEyebrow}
+      heading={fallback.cathedralsHeading}
+      centered
+    />
+    <div class="lead mt-7 mx-auto max-w-[760px] text-center">
+      <p>
+        Under Canellis gader gemmer sig et af Italiens mest opsigtsvækkende
+        vinbygningsværker: et net af snoede kældre og gange, udhugget i den
+        bløde tufklippe mellem 1500- og 1800-tallet. De kaldes "de
+        underjordiske katedraler" på grund af deres høje, hvælvede lofter,
+        der minder om kirkerum — nogle steder når gangene 32 meter under
+        jorden, og tilsammen strækker de sig omkring 20 kilometer gennem
+        bakken.
+      </p>
+      <p class="mt-5">
+        Det var vinhandleren Carlo Gancia, der i midten af 1800-tallet tog
+        metoden med til Canelli efter et ophold i Reims, hvor han lærte
+        champagnens hemmeligheder at kende. Siden har kældrenes naturligt
+        stabile temperatur på 12-14 grader gjort dem ideelle til modning af
+        mousserende vin efter den klassiske metode — bl.a. den berømte Asti
+        Spumante.
+      </p>
+      <p class="mt-5">
+        I 2014 kom de underjordiske katedraler på UNESCO's verdensarvsliste
+        som en del af "Vinlandskabet i Piemonte: Langhe-Roero og
+        Monferrato" — verdens første verdensarvsområde udelukkende viet til
+        vinkultur. I dag ejes og passes kældrene af fire historiske vinhuse,
+        som alle kan besøges efter aftale.
+      </p>
+    </div>
+    <div class="mt-12">
+      <Cards cards={fallback.cathedralsHouses} />
+    </div>
+  </Section>
+
+  <Section variant="soft">
+    <div class="split">
+      <img
+        class="aspect-landscape"
+        src={alpsPanoramaImg.src}
+        alt="Panoramaudsigt fra vinbakkerne i Langhe med Alperne og Monviso i baggrunden"
+        loading="lazy"
+      />
+      <div>
+        <p class="eyebrow">Udsigten</p>
+        <h2 class="font-serif section-heading mt-4">Alperne i baggrunden</h2>
+        <div class="lead mt-7">
+          <p>
+            På klare dage kan I se de snedækkede Alper — med den markante
+            Monviso-tinde i horisonten — hele vejen fra vinbakkerne omkring
+            Canelli.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Section variant="white">
     <div class="split">
       <div>
         <p class="eyebrow">
@@ -157,6 +243,31 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(
         alt={santaLiberaImageAlt}
         loading="lazy"
       />
+    </div>
+  </Section>
+
+  <Section variant="olive">
+    <div class="split">
+      <img
+        class="aspect-portrait"
+        src={alpsMonvisoImg.src}
+        alt="Monviso-tinden i Alperne set fra vinmarkerne i Piemonte ved solnedgang"
+        loading="lazy"
+      />
+      <div>
+        <p class="eyebrow on-dark">Monviso</p>
+        <h2 class="font-serif section-heading mt-4">
+          Piemontes egen bjergtop
+        </h2>
+        <div class="lead mt-7">
+          <p>
+            Monviso er den højeste top i de Cottiske Alper og et markant
+            vartegn, der troner i horisonten over vinlandskabet. Om aftenen,
+            når solen går ned bag toppen, farves himlen og vinmarkerne i
+            varme nuancer — et af områdets smukkeste synsindtryk.
+          </p>
+        </div>
+      </div>
     </div>
   </Section>
 
