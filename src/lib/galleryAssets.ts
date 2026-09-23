@@ -11,6 +11,8 @@ import bathroom003 from "../assets/bathroom/image003.jpg";
 import bathroom004 from "../assets/bathroom/image004.jpg";
 import feriehusBath from "../assets/feriehus-bath.jpg";
 
+import mainHouse from "../assets/summerhouse/main-house.png";
+
 import house003 from "../assets/summerhouse/image003.jpg";
 import house004 from "../assets/summerhouse/image004.jpg";
 import house005 from "../assets/summerhouse/image005.jpg";
@@ -34,6 +36,7 @@ export const galleryHeroImage = feriehusOutdoor;
 export const galleryHeroAlt = "Casa Santa Libera set udefra";
 
 export const outsideImages: LocalGalleryImage[] = [
+  localImage(mainHouse, "Hovedhuset set fra gaden"),
   localImage(feriehusOutdoor, "Feriehuset og omgivelserne"),
   localImage(feriehusOutdoor2, "Udearealer omkring huset"),
   localImage(img2298, "Udsigt fra feriehuset"),
