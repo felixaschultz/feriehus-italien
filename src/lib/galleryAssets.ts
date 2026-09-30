@@ -35,6 +35,14 @@ import wineyard2 from "../assets/summerhouse/wineyard-2.jpg";
 import bedroom from "../assets/summerhouse/bedroom.jpeg";
 import bedroom2 from "../assets/summerhouse/bedroom2.jpg";
 import indoorsImg from "../assets/summerhouse/indoors-img.jpg";
+import stairs from "../assets/summerhouse/stairs.jpg";
+
+import bathroom1 from "../assets/summerhouse/bathroom-1.jpeg";
+import bathroom2 from "../assets/summerhouse/bathroom-2.jpeg";
+import bathroom3 from "../assets/summerhouse/bathroom-3.jpeg";
+import bathroom4 from "../assets/summerhouse/bathroom-4.jpeg";
+import bathroomRustic from "../assets/summerhouse/bathroom.jpeg";
+import shower from "../assets/summerhouse/shower.jpeg";
 
 export interface LocalGalleryImage {
   src: string;
@@ -79,12 +87,19 @@ export const insideImages: LocalGalleryImage[] = [
   localImage(bedroom, "Dobbeltværelse"),
   localImage(bedroom2, "Soveværelse med to enkeltsenge"),
   localImage(indoorsImg, "Klædeskab og kommode på soveværelset"),
+  localImage(stairs, "Trappen op til første sal"),
 ];
 
 export const bathroomImages: LocalGalleryImage[] = [
   localImage(feriehusBath, "Badeværelse"),
   localImage(bathroom003, "Badeværelse med moderne faciliteter"),
   localImage(bathroom004, "Badeværelse i feriehuset"),
+  localImage(bathroom1, "Badeværelse med håndklædestige"),
+  localImage(bathroom2, "Badeværelse med indbygget bruser"),
+  localImage(bathroom3, "Badeværelse med antikt vaskeskab"),
+  localImage(bathroom4, "Badeværelse med håndklædestige og vaskeskab"),
+  localImage(bathroomRustic, "Rustikt badeværelse med træmøbler"),
+  localImage(shower, "Badeværelse med brusekabine"),
 ];
 
 /** First four images for the homepage gallery teaser. */
