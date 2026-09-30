@@ -23,6 +23,19 @@ import house009 from "../assets/summerhouse/image009.jpg";
 import house010 from "../assets/summerhouse/image010.jpg";
 import house011 from "../assets/summerhouse/image011.jpg";
 
+import backview from "../assets/summerhouse/backview.jpeg";
+import balcon from "../assets/summerhouse/balcon.jpeg";
+import summerhouse2 from "../assets/summerhouse/summerhouse-2.jpeg";
+import viewoverWineyard from "../assets/summerhouse/viewover-wineyard.jpeg";
+import outsideView from "../assets/summerhouse/outside-view.jpg";
+import pool from "../assets/summerhouse/pool.jpg";
+import wineyard from "../assets/summerhouse/wineyard.jpg";
+import wineyard2 from "../assets/summerhouse/wineyard-2.jpg";
+
+import bedroom from "../assets/summerhouse/bedroom.jpeg";
+import bedroom2 from "../assets/summerhouse/bedroom2.jpg";
+import indoorsImg from "../assets/summerhouse/indoors-img.jpg";
+
 export interface LocalGalleryImage {
   src: string;
   alt: string;
@@ -43,6 +56,14 @@ export const outsideImages: LocalGalleryImage[] = [
   localImage(img2304, "Terrasse og have"),
   localImage(image004, "Sommerhuset set udefra"),
   localImage(image005, "Omgivelser omkring Santa Libera"),
+  localImage(backview, "Huset set bagfra"),
+  localImage(summerhouse2, "Huset set fra vinmarkerne"),
+  localImage(balcon, "Morgenmad på altanen med udsigt over vinmarkerne"),
+  localImage(viewoverWineyard, "Terrassen med udsigt over vinmarkerne"),
+  localImage(outsideView, "Vinmarker tæt på huset"),
+  localImage(pool, "Afkøling i poolen en varm sommerdag"),
+  localImage(wineyard, "Vinranker med druer"),
+  localImage(wineyard2, "Modne druer på vinstokken"),
 ];
 
 export const insideImages: LocalGalleryImage[] = [
@@ -55,6 +76,9 @@ export const insideImages: LocalGalleryImage[] = [
   localImage(house009, "Feriehuset indenfor"),
   localImage(house010, "Soveværelse eller ophold"),
   localImage(house011, "Indendørs i Casa Santa Libera"),
+  localImage(bedroom, "Dobbeltværelse"),
+  localImage(bedroom2, "Soveværelse med to enkeltsenge"),
+  localImage(indoorsImg, "Klædeskab og kommode på soveværelset"),
 ];
 
 export const bathroomImages: LocalGalleryImage[] = [
